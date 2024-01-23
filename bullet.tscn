@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3anunr7p3xwj"]
+
+[ext_resource type="Texture2D" uid="uid://bv3ok6mx628an" path="res://assets/square_player_16.png" id="1_yn5cl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7q48l"]
+size = Vector2(4.7, 1.8)
+
+[node name="Bullet" type="RigidBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_7q48l")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.3, 0.1)
+texture = ExtResource("1_yn5cl")

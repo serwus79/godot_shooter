@@ -2,7 +2,16 @@ using Godot;
 
 public partial class Player : CharacterBody2D
 {
-    public const float MoveSpeed = 500.0f;
+    private const float MoveSpeed = 400.0f;
+    private const float BulletSpeed = 2000f;
+    private PackedScene _bulletScene;
+
+    public override void _Ready()
+    {
+        base._Ready();
+        _bulletScene = ResourceLoader.Load<PackedScene>("res://bullet.tscn");
+    }
+
 
     public override void _PhysicsProcess(double delta)
     {
@@ -39,5 +48,26 @@ public partial class Player : CharacterBody2D
 
         MoveAndSlide();
         LookAt(GetGlobalMousePosition());
+
+        if (Input.IsActionJustPressed("LMB"))
+        {
+            Fire();
+        }
     }
+
+    private void Fire()
+    {
+        GD.Print("fire");
+        var bullet = _bulletScene.Instantiate<RigidBody2D>();
+        bullet.Position = GlobalPosition;
+        bullet.RotationDegrees = RotationDegrees;
+
+        var shootDirection = new Vector2(BulletSpeed, 0).Rotated(Rotation);
+        GD.Print("shoot direction:", shootDirection);
+        bullet.ApplyImpulse(shootDirection);
+
+        // GetParent().AddChild(bullet);
+        GetTree().Root.AddChild(bullet);
+    }
+    
 }

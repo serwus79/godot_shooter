@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://inl4dcyrm55o"]
+[gd_scene load_steps=6 format=3 uid="uid://inl4dcyrm55o"]
 
 [ext_resource type="Texture2D" uid="uid://bv3ok6mx628an" path="res://assets/square_player_16.png" id="1_6524d"]
+[ext_resource type="Script" path="res://world.cs" id="1_f4yc4"]
 [ext_resource type="Script" path="res://Player.cs" id="1_j0uno"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ai0gv"]
@@ -10,6 +11,7 @@ size = Vector2(8, 8)
 size = Vector2(9, 9)
 
 [node name="world" type="Node2D"]
+script = ExtResource("1_f4yc4")
 
 [node name="Player" type="CharacterBody2D" parent="."]
 script = ExtResource("1_j0uno")
