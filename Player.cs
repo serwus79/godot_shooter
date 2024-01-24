@@ -5,11 +5,14 @@ public partial class Player : CharacterBody2D
     private const float MoveSpeed = 400.0f;
     private const float BulletSpeed = 2000f;
     private PackedScene _bulletScene;
+    private Node2D _barrel;
 
     public override void _Ready()
     {
         base._Ready();
+        
         _bulletScene = ResourceLoader.Load<PackedScene>("res://bullet.tscn");
+                _barrel = (Node2D)this.FindChild("BarrelPoint");
     }
 
 
@@ -49,7 +52,7 @@ public partial class Player : CharacterBody2D
         MoveAndSlide();
         LookAt(GetGlobalMousePosition());
 
-        if (Input.IsActionJustPressed("LMB"))
+        if (Input.IsActionJustPressed("LMB") )
         {
             Fire();
         }
@@ -59,11 +62,10 @@ public partial class Player : CharacterBody2D
     {
         GD.Print("fire");
         var bullet = _bulletScene.Instantiate<RigidBody2D>();
-        bullet.Position = GlobalPosition;
+        bullet.Position = _barrel.GlobalPosition;
         bullet.RotationDegrees = RotationDegrees;
 
         var shootDirection = new Vector2(BulletSpeed, 0).Rotated(Rotation);
-        GD.Print("shoot direction:", shootDirection);
         bullet.ApplyImpulse(shootDirection);
 
         // GetParent().AddChild(bullet);
