@@ -4,43 +4,24 @@ public partial class Player : CharacterBody2D
 {
     private const float MoveSpeed = 400.0f;
     private const float BulletSpeed = 2000f;
-    private PackedScene _bulletScene;
     private Node2D _barrel;
+    private PackedScene _bulletScene;
 
     public override void _Ready()
     {
         base._Ready();
-        
+
         _bulletScene = ResourceLoader.Load<PackedScene>("res://bullet.tscn");
-                _barrel = (Node2D)this.FindChild("BarrelPoint");
+        _barrel = (Node2D)FindChild("BarrelPoint");
+        var screenSize = GetViewportRect().Size;
+
+        Position = screenSize / 2;
     }
 
 
     public override void _PhysicsProcess(double delta)
     {
         var velocity = Velocity;
-
-        // // Add the gravity.
-        // if (!IsOnFloor())
-        // 	velocity.Y += gravity * (float)delta;
-        //
-        // // Handle Jump.
-        // if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
-        // 	velocity.Y = JumpVelocity;
-        //
-        // // Get the input direction and handle the movement/deceleration.
-        // // As good practice, you should replace UI actions with custom gameplay actions.
-        // Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-        // if (direction != Vector2.Zero)
-        // {
-        // 	velocity.X = direction.X * Speed;
-        // }
-        // else
-        // {
-        // 	velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-        // }
-        //
-        // Velocity = velocity;
 
         var direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 
@@ -52,16 +33,13 @@ public partial class Player : CharacterBody2D
         MoveAndSlide();
         LookAt(GetGlobalMousePosition());
 
-        if (Input.IsActionJustPressed("LMB") )
-        {
-            Fire();
-        }
+        if (Input.IsActionJustPressed("LMB")) Fire();
     }
 
     private void Fire()
     {
-        GD.Print("fire");
         var bullet = _bulletScene.Instantiate<RigidBody2D>();
+        bullet.SetMeta("IsBullet", true);
         bullet.Position = _barrel.GlobalPosition;
         bullet.RotationDegrees = RotationDegrees;
 
@@ -71,5 +49,19 @@ public partial class Player : CharacterBody2D
         // GetParent().AddChild(bullet);
         GetTree().Root.AddChild(bullet);
     }
-    
+
+    private void Kill()
+    {
+        GD.Print("KILL");
+        GetTree().ReloadCurrentScene();
+    }
+
+    public void OnArea2BodyEntered(Node2D body)
+    {
+        if (body.Name == "Enemy")
+        {
+            GD.Print("player HIT by ", body.Name);
+            Kill();
+        }
+    }
 }

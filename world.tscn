@@ -1,14 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://inl4dcyrm55o"]
+[gd_scene load_steps=7 format=3 uid="uid://inl4dcyrm55o"]
 
 [ext_resource type="Texture2D" uid="uid://bv3ok6mx628an" path="res://assets/square_player_16.png" id="1_6524d"]
 [ext_resource type="Script" path="res://world.cs" id="1_f4yc4"]
 [ext_resource type="Script" path="res://Player.cs" id="1_j0uno"]
+[ext_resource type="PackedScene" uid="uid://vg57v8fdtg56" path="res://Enemy.tscn" id="4_1m83x"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ai0gv"]
-size = Vector2(8, 8)
+size = Vector2(12, 12)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lmrkd"]
-size = Vector2(9, 9)
+size = Vector2(13, 13)
 
 [node name="world" type="Node2D"]
 script = ExtResource("1_f4yc4")
@@ -20,7 +21,12 @@ script = ExtResource("1_j0uno")
 shape = SubResource("RectangleShape2D_ai0gv")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
-scale = Vector2(0.55, 0.55)
+texture = ExtResource("1_6524d")
+
+[node name="BarrelPoint" type="Sprite2D" parent="Player"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(6, 0)
+scale = Vector2(0.1, 0.1)
 texture = ExtResource("1_6524d")
 
 [node name="Area2D" type="Area2D" parent="Player"]
@@ -28,8 +34,6 @@ texture = ExtResource("1_6524d")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Area2D"]
 shape = SubResource("RectangleShape2D_lmrkd")
 
-[node name="BarrelPoint" type="Sprite2D" parent="Player"]
-modulate = Color(0.168627, 0.631373, 0.388235, 1)
-position = Vector2(4, 0)
-scale = Vector2(0.05, 0.05)
-texture = ExtResource("1_6524d")
+[node name="Enemy" parent="." instance=ExtResource("4_1m83x")]
+
+[connection signal="body_entered" from="Player/Area2D" to="Player" method="OnArea2BodyEntered"]
